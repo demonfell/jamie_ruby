@@ -1,4 +1,7 @@
-servers = File.readlines('/Users/james/repos/jamie_ruby/jlp')
+path_to_repo = "/Users/james/repos/jamie_ruby"
+static_inventory_name = "jlp"
+
+servers = File.readlines(path_to_repo + '/' + static_inventory_name)
 
 def get_foo_only(servers)
   servers.select{ |i| i[/^foo-server.*/] }
@@ -16,8 +19,7 @@ end
 print "include(\"../base.conf\")\n" \
 "\n" \
 "\n" \
-"baz-servers:\n"\
-"[\n"
+"baz-servers: [\n"
   baz_servers = get_baz_only(servers)
   baz_servers.each_with_index do |server_name,i|
   #if server_name[i] != server_name[-1]
@@ -29,8 +31,7 @@ print "include(\"../base.conf\")\n" \
 end
 print "]\n"\
 "\n" \
-"bar-servers:\n"\
-"[\n"
+"bar-servers: [\n"
   bar_servers = get_bar_only(servers)
   bar_servers.each_with_index do |server_name,i|
   #if server_name[i] != server_name[-1]
@@ -42,8 +43,7 @@ print "]\n"\
 end
 print "]\n"\
 "\n" \
-"foo-servers:\n"\
-"[\n"
+"foo-servers: [\n"
   foo_servers = get_foo_only(servers)
   foo_servers.each_with_index do |server_name,i|
   #if server_name[i] != server_name[-1]

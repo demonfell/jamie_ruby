@@ -1,8 +1,8 @@
-sentence = IO.read('/Users/james/repos/jamie_ruby/jlp') - no
+sentence = IO.read('/Users/james/repos/jamie_ruby/jlp') # no
 
-servers = File.readlines('/Users/james/repos/jamie_ruby/jlp') - better
+servers = File.readlines('/Users/james/repos/jamie_ruby/jlp') # better
 
-servers.each do |node| BLOCK - no
+servers.each do |node| BLOCK # no
 
 servers.each do |node| puts node
 end - iterated over the lines
@@ -27,6 +27,8 @@ irb(main):048:0> baz_only[1].chomp
 => "baz-server-01002.node.my-test-1"
 irb(main):049:0>
 
+###
+
 def get_parallel_ad(testvar)
   ad_num = testvar.split(".")[2].scan(/\d/).join
   region_id = testvar.split(".")[3]
@@ -48,3 +50,29 @@ irb(main):068:0> testvar="baz-server.node.poop2.us-testland-1"
 => "baz-server.node.poop2.us-testland-1"
 irb(main):069:0> get_parallel_ad(testvar)
 => "bad-ad-2"
+
+### works
+
+stops = ["Northern Liberties", "Fishtown", "Chinatown", "Kensington", "Old City", "36th Street", "22nd Street"]
+stops.each_with_index do |stop,i|
+  if stop[i] != stop[-1]
+    puts "\"#{stop}\","	
+  else
+    puts "\"#{stop}\""	
+  end
+end
+
+***
+
+#!/usr/bin/env ruby
+
+#require 'optparse'
+
+#options={}
+#OptionParser.new do |opts|
+#	opts.banner = "Usage: test_config [options]"
+
+#	opts.on('-a', '--airport') { |o| options[:airport_code] = o }
+#end.parse!
+
+
