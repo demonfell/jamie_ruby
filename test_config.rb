@@ -1,56 +1,50 @@
+#!/usr/bin/env ruby 
+
+require 'optparse'
+require 'fileutils'
+
+#path_to_repo = File.join(File.dirname(__FILE__), '../../../')
 path_to_repo = "/Users/james/repos/jamie_ruby"
-static_inventory_name = "jlp"
 
-servers = File.readlines(path_to_repo + '/' + static_inventory_name)
+options={}
+option_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: test_config.rb [options]"
 
-def get_foo_only(servers)
-  servers.select{ |i| i[/^foo-server.*/] }
-end
+  opts.on('-a', '--airport AIRPORT_CODE', 'Three-letter airport code' ) do  |airport_code| options[:airport_code] = airport_code 
+  end
 
-def get_bar_only(servers)
-  servers.select{ |i| i[/^bar-server.*/] }
-end
-
-def get_baz_only(servers)
-  servers.select{ |i| i[/^baz-server.*/] }
-end
-
-
-print "include(\"../base.conf\")\n" \
-"\n" \
-"\n" \
-"baz-servers: [\n"
-  baz_servers = get_baz_only(servers)
-  baz_servers.each_with_index do |server_name,i|
-  #if server_name[i] != server_name[-1]
-  if baz_servers[i] != baz_servers[-1]
-    print "\"#{server_name.strip}\",\n"	
-  else
-    print "\"#{server_name.strip}\"\n"
+  opts.on('-r', '--realmland REALMLAND_ID', 'Realmland ID in the format my-realmland-1') do  |realmland_id| options[:realmland_id] = region_id 
   end
 end
-print "]\n"\
-"\n" \
-"bar-servers: [\n"
-  bar_servers = get_bar_only(servers)
-  bar_servers.each_with_index do |server_name,i|
-  #if server_name[i] != server_name[-1]
-  if bar_servers[i] != bar_servers[-1]
-    print "\"#{server_name.strip}\",\n"	
-  else
-    print "\"#{server_name.strip}\"\n"
+option_parser.parse!
+
+
+#servers = File.readlines(path_to_repo + '/jamie_ruby/ansible/inventory/' + options[:airport_code])
+servers = File.readlines(path_to_repo + options[:airport_code])
+#FileUtils.mkdir_p path_to_repo + '/config/' + options[:realmland_id]
+#outfile = File.new(path_to_repo + '/config/' + options[:realmland_id] + '/test.conf', 'w')
+
+def get_my_servers_only(servers, query, outconfig)
+  queried_list = servers.select{ |i| i[/^#{query}.*/] }
+  queried_list.each_with_index do |server_name, i|
+    if queried_list[i] != queried_list[-1]
+      outconfig.print "  \"#{server_name.strip}\",\n"
+    else
+      outconfig.print "  \"#{server_name.strip}\"\n"
+      outconfig.print "]\n"\
+    end
   end
 end
-print "]\n"\
+
+outfile.print "include \"../base.conf\"\n" \
 "\n" \
-"foo-servers: [\n"
-  foo_servers = get_foo_only(servers)
-  foo_servers.each_with_index do |server_name,i|
-  #if server_name[i] != server_name[-1]
-  if foo_servers[i] != foo_servers[-1]
-    print "\"#{server_name.strip}\",\n"	
-  else
-    print "\"#{server_name.strip}\"\n"
-  end
-end
-print "]\n"
+"fooServers: [\n"
+get_my_servers_only(servers,"foo-server", outfile)
+"\n" \
+"barServers: [\n"
+get_my_servers_only(servers,"bar-server", outfile)
+"\n" \
+"bazServers: [\n"
+get_my_servers_only(servers,"baz-server", outfile)
+
+outfile.close
